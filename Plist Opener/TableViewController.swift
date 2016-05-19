@@ -81,6 +81,21 @@ class TableViewController: UITableViewController {
         let plistFilename = plistFilenames[row]
         let plistTitle = (try? titleForPlist(plistFilename)) ?? "<No Title Found!>"
         let destinationViewController = segue.destinationViewController as! TitleViewController
+        do{
+            try titleForPlist(plistFilename)
+        }
+        catch TitledPlistReaderError.BadPlist{
+            destinationViewController.mistakeTitle = "Bad Plist"
+        }
+        catch TitledPlistReaderError.FileDoesNotExist{
+            destinationViewController.mistakeTitle = "File Does not Exist"
+        }
+        catch TitledPlistReaderError.UntitledPlist{
+            destinationViewController.mistakeTitle = "Untitled Plist"
+        }
+        catch {
+            destinationViewController.mistakeTitle = "GOOP ERROR aka unknown error"
+        }
         destinationViewController.plistTitle = plistTitle
     }
 
